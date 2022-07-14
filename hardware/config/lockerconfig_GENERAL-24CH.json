@@ -1,6 +1,6 @@
 {
   "lockerID": "locker000001",
-  "controllerModel": "FORTH-12CH",
+  "controllerModel": "GENERAL-24CH",
   "lang": "ph",
   "BoardAmount": 1,
   "sectionLayout": {
@@ -35,7 +35,7 @@
       "doorSize": "M"
     },
     "6": {
-      "board": 1,
+      "board": 2,
       "channel": 6,
       "doorSize": "M"
     },
@@ -73,6 +73,7 @@
   "doorGroup": {
     "1": ["1","2","3","4"],
     "2": ["5","6","7","8"],
-    "3": ["9","10","11","12"]
+    "3": ["9","10","11","12"],
+    "4": ["9","13","11","111"]
   }
 }

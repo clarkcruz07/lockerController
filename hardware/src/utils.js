@@ -11,14 +11,32 @@ const utils = {
         setTimeout(resolve, ms);
       });
     },
-    getXORchecksum: function(hexAry) {
-      let cs = 0;
-      for (let idx in hexAry) {
-          if(idx > 1) {
-              cs ^= hexAry[idx];
-          }
+    boardIdTo2ByteHex: function(boardId) {
+      if(boardId === undefined) {
+        return false;
       }
-      return cs;
+      const hexpack = [];
+  
+      let ID = boardId.toString()
+      if (ID.length == 1) {
+              ID = "0" + ID;
+      }
+  
+      // (2 byte)Push board ID
+      hexpack.push('0x3' + ID[0]);
+      hexpack.push('0x3' + ID[1]);
+      return hexpack;
+    },
+    convertHextoBinStatus(hexValue, startIdx) {
+        var hexString = hexValue.toString("hex").toUpperCase();
+        var binString = (parseInt(hexString, 16)).toString(2);
+        var binArray = binString.split('')
+        let binaryStatus = {};
+        binArray.slice().reverse().forEach(function(item, key) {
+            let channel = (parseInt(key, 10) + startIdx).toString();
+            binaryStatus[channel] = item;
+        });
+        return binaryStatus;
     }
 }
 

@@ -1,0 +1,23 @@
+{
+    "model": "FORTH-12CH",
+    "channel": 12,
+    "Max_id": 99,
+    "Communication": {
+        "PATH": "/dev/ttyUSB0",
+        "BAUDRATE": 9600,
+        "HEXPACK": {
+            "example" : "0x02, 0x4F, 0x30, 0x32, 0x50, 0x43, 0x43, 0x43, 0x43, 0x43, 0x43, 0x43, 0x43, 0x43, 0x43, 0x43, 0xXX, 0x03",
+            "initial": "0x02",
+            "end": "0x03",
+            "cmd_packages_length": "0x00",
+            "command": {
+                "unlock": "0x4F",
+                "querystate": "0x47"
+            },
+            "doorStatus": {
+                "open": "0x50",
+                "close": "0x43"
+            }
+        }
+    }
+}

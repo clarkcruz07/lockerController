@@ -17,30 +17,32 @@ class LockerCommand {
     }
 
     async doorOpen(doorNo){
+        let result = {
+            "doorID": doorNo,
+            "doorStatus": "Error"
+        };
         let door = lockerconfig.doorMapping[doorNo];
         if(door === undefined) {
-            return {
-                "doorID": doorNo,
-                "doorStatus": "Error"
-            }
-        }
-        let response = await this.controlboardCommu.portWrite(functions.getCommandUnlock(door.board, door.channel));
-        console.log('[INFO] command unlock door no.', doorNo, response);
-        if(response) {
-            return {
-                "doorID": doorNo,
-                "doorStatus": STATUS_DOOROPEN
-            }
+            result['doorStatus'] = "No door no." + doorNo.toString();
         }
         else {
-            return {
-                "doorID": doorNo,
-                "doorStatus": "Error"
+            let response = await this.controlboardCommu.portWrite(functions.getCommandUnlock(door.board, door.channel));
+            console.log('[INFO] command unlock door no.', doorNo, response);
+            if(response) {
+                let channelStatus = functions.getStatusFromQuery(response);
+                result['doorStatus'] = STATUS_DOOROPEN;
+            }
+            else {
+                result['doorStatus'] = "Serial communication error";
             }
         }
+        return result;
     }
 
     async getDoorsStatus() {
+        let result = {
+            'doorStatus': 'Error'
+        };
         let boardIds = [];
         for (const doorId in this.lockerDoorList) {
             if (Object.hasOwnProperty.call(this.lockerDoorList, doorId)) {
@@ -51,42 +53,23 @@ class LockerCommand {
             }
         }
         for (const boardId of boardIds) {
-            let response_raw = await this.controlboardCommu.portWrite(functions.getCommandQueryState(boardId));
-            console.log('[INFO] command querystate controlboard no.', boardId, response_raw);
-            if(response_raw) {
-                let channelStatus = {};
-                channelStatus = Object.assign({},
-                    this.convertHextoBinStatus(response_raw.slice(6, 7), 1),
-                    this.convertHextoBinStatus(response_raw.slice(7, 8), 9),
-                    this.convertHextoBinStatus(response_raw.slice(8, 9), 17));
+            let response = await this.controlboardCommu.portWrite(functions.getCommandQueryState(boardId));
+            console.log('[INFO] command querystate controlboard no.', boardId, response);
+            if(response) {
+                let channelStatus = functions.getStatusFromQuery(response);
                 
-                    Object.keys(this.lockerDoorList).map((doorId, key) => {
-                      let door = this.lockerDoorList[doorId];
-                      if(parseInt(door.board, 10) === parseInt(boardId, 10)) {
-                        door['doorStatus'] = channelStatus[door.channel]
-                      }
-                      return door
-                    });
+                result['doorStatus'] = Object.keys(this.lockerDoorList).map((doorId) => {
+                    if(parseInt(this.lockerDoorList[doorId].board, 10) === parseInt(boardId, 10)) {
+                        return channelStatus[parseInt(this.lockerDoorList[doorId].channel, 10)-1]
+                    }
+                });
             }
             else {
-                Object.keys(this.lockerDoorList).map((doorId, key) => {
-                    let door = this.lockerDoorList[doorId];
-                    if(parseInt(door.board, 10) === parseInt(boardId, 10)) {
-                      door['doorStatus'] = "Error"
-                    }
-                    return door
-                  });
+                result['doorStatus'] = "Serial communication error on board id. " + boardId.toString();
             }
         }
         
-        if(this.lockerDoorList) {
-            return this.lockerDoorList
-        }
-        else {
-            return {
-                "doorsStatus": "Error"
-            }
-        }
+        return result;
     }
 
     async doorLEDControl(doorNo, controlStatus){
@@ -94,36 +77,28 @@ class LockerCommand {
         if(door === undefined) {
             return {
                 "doorID": doorNo,
-                "doorStatus": "Error"
+                "doorLEDStatus": "Error"
             }
         }
-        let response = await this.controlboardCommu.portWrite(functions.getCommandLEDcontrol(door.board, door.channel));
-        console.log('[INFO] command led control querystate door no.', doorNo, controlStatus? "ON": "OFF", response);
+
+        let response = undefined;
+        if(functions.getCommandLEDcontrol) {
+            response = await this.controlboardCommu.portWrite(functions.getCommandLEDcontrol(door.board, door.channel));
+            console.log('[INFO] command led control querystate door no.', doorNo, controlStatus? "ON": "OFF", response);
+        }
         if(response) {
             return {
                 "doorID": doorNo,
-                "doorStatus": controlStatus? "ON": "OFF"
+                "doorLEDStatus": controlStatus? "ON": "OFF"
             }
         }
         else {
             return {
                 "doorID": doorNo,
-                "doorStatus": "Error"
+                "doorLEDStatus": "Error"
             }
         }
         
-    }
-    
-    convertHextoBinStatus(hexValue, startIdx) {
-        var hexString = hexValue.toString("hex").toUpperCase();
-        var binString = (parseInt(hexString, 16)).toString(2);
-        var binArray = binString.split('')
-        let binaryStatus = {};
-        binArray.slice().reverse().forEach(function(item, key) {
-            let channel = (parseInt(key, 10) + startIdx).toString();
-            binaryStatus[channel] = item;
-        });
-        return binaryStatus;
     }
 }
 
