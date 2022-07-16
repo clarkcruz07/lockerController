@@ -147,7 +147,7 @@ router.get('/door/:id/status', async (req, res) => {
   if((doors === {}) || (doors === undefined)) {
     response.status_msg = 'Cannot get door status';
   }
-  else {
+  else {/*
     console.log(doors);
     console.log(doors.doors[reqDoorId]);
     const filteredDoors = Object.keys(doors)
@@ -157,10 +157,14 @@ router.get('/door/:id/status', async (req, res) => {
             obj[doorId] = doors[doorId];
             return obj;
         }, {});
-        console.log(filteredDoors);
-    if(filteredDoors !== undefined) {
+        console.log(filteredDoors);*/
+    if(doors.doors[reqDoorId] !== undefined) {
+      let doorObj = {
+        doorId: reqDoorId,
+        doorStatus: doors.doors[reqDoorId]
+      }
       response.status = "success";
-      response.data = filteredDoors;
+      response.data = doorObj;
       return res.json(response);
     }
     else {
