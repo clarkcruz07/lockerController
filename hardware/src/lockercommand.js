@@ -84,19 +84,21 @@ class LockerCommand {
 
         let door = lockerconfig.doorMapping[doorNo];
         if(door !== undefined) {
-            let serial_response = await this.controlboardCommu.portWrite(functions.getCommandLEDcontrol(door.board, door.channel));
-            console.log('[INFO] command led control querystate door no.', doorNo, controlStatus? "ON": "OFF", response);
-            if(serial_response) {
-                return {
-                    "doorID": doorNo,
-                    "ledStatus": controlStatus? "ON": "OFF"
+            if(functions.getCommandLEDcontrol) {
+                let serial_response = await this.controlboardCommu.portWrite(functions.getCommandLEDcontrol(door.board, door.channel));
+                console.log('[INFO] command led control querystate door no.', doorNo, controlStatus? "ON": "OFF", response);
+                if(serial_response) {
+                    return {
+                        "doorID": doorNo,
+                        "ledStatus": controlStatus? "ON": "OFF"
+                    }
                 }
             }
         }
         else {
             response['status_msg'] = "Serial communication error on board id. " + boardId.toString();
         }
-        
+
         return response;
     }
 }
