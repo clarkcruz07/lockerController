@@ -48,7 +48,7 @@ class SerialCommunication {
 
             var port = this.comport;
             const prom = new Promise(function (resolve) {
-                const parser = port.pipe(new InterByteTimeoutParser({ interval: 200 }))
+                const parser = port.pipe(new InterByteTimeoutParser({ interval: 350 }))
                 let parserMonitor = setTimeout(() => {
                     parser.end();
                 }, 500);
