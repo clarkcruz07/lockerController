@@ -60,7 +60,7 @@ class LockerCommand {
                 
                 Object.keys(this.lockerDoorList).map((doorId) => {
                     if(parseInt(this.lockerDoorList[doorId].board, 10) === parseInt(boardId, 10)) {
-                        doorsStatus[doorId] = channelStatus[parseInt(this.lockerDoorList[doorId].channel, 10)-1];
+                        doorsStatus[doorId] = channelStatus[this.lockerDoorList[doorId].channel];
                     }
                 });
             }
