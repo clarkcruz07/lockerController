@@ -74,17 +74,17 @@ router.get('/doors/:status', async (req, res) => {
     }
     
     // Get filtered status
-    let doors = await lockerCtl.getDoorsStatus();
-    console.log(doors);
-    if((doors === {}) || (doors === undefined)) {
+    let doorStatusResponse = await lockerCtl.getDoorsStatus();
+    console.log(doorStatusResponse.doors);
+    if((doorStatusResponse.doors === {}) || (doorStatusResponse.doors === undefined)) {
       response.status_msg = 'Cannot get door status';
     }
     else {
       const filteredDoors = [];
-      for (const key in doors) {
-        console.log(doors[key], key);
-        if (Object.hasOwnProperty.call(doors, key)) {
-          const doorStatus = doors[key];
+      for (const key in doorStatusResponse.doors) {
+        console.log(doorStatusResponse.doors[key], key);
+        if (Object.hasOwnProperty.call(doorStatusResponse.doors, key)) {
+          const doorStatus = doorStatusResponse.doors[key];
           reqDoorStatus = rqDoorStatus === 'opened'? 'open' : rqDoorStatus === 'closed'? 'close': '';
           if(doorStatus === reqDoorStatus) {
             filteredDoors.push({
