@@ -138,6 +138,7 @@
 }
 
 ```
+** Remark: now doorStatus may be not send with package if board not response data after open, but status still can get from get status API **
 
 
 ## Open All doors (Unavailable now)
