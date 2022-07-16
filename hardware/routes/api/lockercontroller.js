@@ -16,13 +16,12 @@ router.get('/', (req, res) => {
   let responseErrorCode = 400;
   let response = {
     status: "fail",
-    status_msg: "",
-    data: {}
+    status_msg: ""
   };
   let locker = lockerCtl.lockerInfo();
   if(locker != {}) {
     response.status = "success";
-    response.data = locker;
+    response['data'] = locker;
     return res.json(response);
   }
   else {
@@ -39,8 +38,7 @@ router.get('/doors', async (req, res) => {
   let responseErrorCode = 400;
   let response = {
     status: "fail",
-    status_msg: "",
-    data: {}
+    status_msg: ""
   };
   let doors = await lockerCtl.getDoorsStatus();
   if((doors === {}) || (doors === undefined)) {
@@ -48,7 +46,7 @@ router.get('/doors', async (req, res) => {
   }
   else {
     response.status = "success";
-    response.data = doors;
+    response['data'] = doors;
     return res.json(response);
   }
   return res.status(responseErrorCode).json(response);
@@ -62,8 +60,7 @@ router.get('/doors/:status', async (req, res) => {
   let responseErrorCode = 400;
   let response = {
     status: "fail",
-    status_msg: "",
-    data: {}
+    status_msg: ""
   };
 
   // Check requested status to filter
@@ -88,7 +85,7 @@ router.get('/doors/:status', async (req, res) => {
           }, {});
           if(filteredDoors !== undefined) {
             response.status = "success";
-            response.data = filteredDoors;
+            response['data'] = filteredDoors;
             return res.json(response);
           }
           else {
@@ -110,8 +107,7 @@ router.get('/door/:id/open', async (req, res) => {
   let responseErrorCode = 400;
   let response = {
     status: "fail",
-    status_msg: "",
-    data: {}
+    status_msg: ""
   };
   let door = await lockerCtl.doorOpen(req.params.id);
   if(lockerCtl.doorLEDControl) {
@@ -121,7 +117,7 @@ router.get('/door/:id/open', async (req, res) => {
   
   if(door != {}) {
     response.status = "success";
-    response.data = door;
+    response['data'] = door;
     return res.json(response);
   }
   else {
@@ -138,8 +134,7 @@ router.get('/door/:id/status', async (req, res) => {
   let responseErrorCode = 400;
   let response = {
     status: "fail",
-    status_msg: "",
-    data: {}
+    status_msg: ""
   };
   
   const reqDoorId = req.params.id;
@@ -147,24 +142,14 @@ router.get('/door/:id/status', async (req, res) => {
   if((doors === {}) || (doors === undefined)) {
     response.status_msg = 'Cannot get door status';
   }
-  else {/*
-    console.log(doors);
-    console.log(doors.doors[reqDoorId]);
-    const filteredDoors = Object.keys(doors)
-          .filter(doorId => doorId === reqDoorId)
-          .reduce((obj, doorId) => {
-            console.log(obj[doorId], doors[doorId])
-            obj[doorId] = doors[doorId];
-            return obj;
-        }, {});
-        console.log(filteredDoors);*/
+  else {
     if(doors.doors[reqDoorId] !== undefined) {
       let doorObj = {
         doorId: reqDoorId,
         doorStatus: doors.doors[reqDoorId]
       }
       response.status = "success";
-      response.data = doorObj;
+      response['data'] = doorObj;
       return res.json(response);
     }
     else {
