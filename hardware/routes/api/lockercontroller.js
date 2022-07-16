@@ -64,9 +64,10 @@ router.get('/doors/:status', async (req, res) => {
   };
 
   // Check requested status to filter
+  const doorPossibleStatus = ['opened', 'closed'];
   const rqDoorStatus = req.params.status;
-  console.log('rqDoorStatus', rqDoorStatus, rqDoorStatus in ['opened', 'closed']);
-  if(rqDoorStatus in ['opened', 'closed']) {
+  console.log('rqDoorStatus', rqDoorStatus, doorPossibleStatus.includes(rqDoorStatus));
+  if(doorPossibleStatus.includes(rqDoorStatus)) {
     let doorStatusRepresent = 0;
     if(rqDoorStatus === 'opened') {
         doorStatusRepresent = 1;
