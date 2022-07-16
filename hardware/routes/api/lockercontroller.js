@@ -80,21 +80,28 @@ router.get('/doors/:status', async (req, res) => {
       response.status_msg = 'Cannot get door status';
     }
     else {
-      const filteredDoors = Object.keys(doors)
-            .filter(doorId => parseInt(doors[doorId].doorStatus, 10) === doorStatusRepresent)
-            .reduce((obj, doorId) => {
-                obj[doorId] = doors[doorId];
-                return obj;
-          }, {});
-          console.log('filteredDoors', filteredDoors);
-          if(filteredDoors !== undefined) {
-            response.status = "success";
-            response['data'] = filteredDoors;
-            return res.json(response);
+      const filteredDoors = [];
+      for (const key in doors) {
+        if (Object.hasOwnProperty.call(doors, key)) {
+          const doorStatus = doors[key];
+          if(doorStatus === rqDoorStatus) {
+            filteredDoors.push({
+              doorId: key,
+              doorStatus: doorStatus
+            });
           }
-          else {
-            response.status_msg = 'No Door status found';
-          }
+          
+        }
+      }
+      console.log('filteredDoors', filteredDoors);
+      if(filteredDoors !== undefined) {
+        response.status = "success";
+        response['data'] = filteredDoors;
+        return res.json(response);
+      }
+      else {
+        response.status_msg = 'No Door status found';
+      }
     }
   }
   else {
