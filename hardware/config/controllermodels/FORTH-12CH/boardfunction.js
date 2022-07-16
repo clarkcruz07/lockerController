@@ -46,7 +46,7 @@ const functions = {
     let channelStatus = {};
     let key = 1;
     stateArray.forEach( (element) => {
-      channelStatus[key.toString()] = (element === '43'? 'close' : element === '50'? 'open' : '';
+      channelStatus[key.toString()] = element === '43'? 'close' : element === '50'? 'open' : '';
       key += 1;
     });
 
