@@ -28,10 +28,21 @@ class LockerCommand {
         else {
             let serial_response = await this.controlboardCommu.portWrite(functions.getCommandUnlock(door.board, door.channel));
             console.log('[INFO] command unlock door no.', doorNo, serial_response);
+            
             if(serial_response) {
+                /*** Just prevent someboard not response with door status */
+                const selectedDoor = this.lockerDoorList[doorId];
+                const boardId = selectedDoor.board;
+                const channel = selectedDoor.channel;
+                let serial_get_status_response = await this.controlboardCommu.portWrite(functions.getCommandQueryState(boardId));
+                if(serial_get_status_response) {
+                    let channelStatus = functions.getStatusFromQuery(serial_get_status_response);
+                    response['doorStatus'] = channelStatus[channel];
+                }
+                /*
                 let channelStatus = functions.getStatusFromQuery(serial_response, doorNo);
                 //console.log('doorOpen', doorNo, channelStatus, serial_response);
-                response['doorStatus'] = channelStatus;
+                response['doorStatus'] = channelStatus;*/
             }
             else {
                 response['error_msg'] = "Serial communication error";
