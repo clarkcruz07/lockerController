@@ -65,6 +65,7 @@ router.get('/doors/:status', async (req, res) => {
 
   // Check requested status to filter
   const rqDoorStatus = req.params.status;
+  console.log('rqDoorStatus', rqDoorStatus, rqDoorStatus in ['opened', 'closed']);
   if(rqDoorStatus in ['opened', 'closed']) {
     let doorStatusRepresent = 0;
     if(rqDoorStatus === 'opened') {
@@ -73,6 +74,7 @@ router.get('/doors/:status', async (req, res) => {
     
     // Get filtered status
     let doors = await lockerCtl.getDoorsStatus();
+    console.log(doors);
     if((doors === {}) || (doors === undefined)) {
       response.status_msg = 'Cannot get door status';
     }
@@ -83,6 +85,7 @@ router.get('/doors/:status', async (req, res) => {
                 obj[doorId] = doors[doorId];
                 return obj;
           }, {});
+          console.log('filteredDoors', filteredDoors);
           if(filteredDoors !== undefined) {
             response.status = "success";
             response['data'] = filteredDoors;
