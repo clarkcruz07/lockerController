@@ -8,7 +8,7 @@ const LockerCommand = require('../../src/lockercommand.js');
 
 let lockerCtl = new LockerCommand();
 
-// @route GET api/locker
+// @route GET api/lockercontroller/locker
 // @description Get locker configuration
 // @access Public
 router.get('/', (req, res) => {
@@ -31,7 +31,7 @@ router.get('/', (req, res) => {
   return res.status(responseErrorCode).json(response);
 });
 
-// @route GET api/locker/doors
+// @route GET api/lockercontroller/locker/doors
 // @description Get doors status list
 // @access Public
 router.get('/doors', async (req, res) => {
@@ -54,7 +54,7 @@ router.get('/doors', async (req, res) => {
   return res.status(responseErrorCode).json(response);
 });
 
-// @route GET api/locker/doors/:status
+// @route GET api/lockercontroller/locker/doors/:status
 // @description Get door that have a speficfic status list (opened, closed)
 // @access Public
 router.get('/doors/:status', async (req, res) => {
@@ -102,7 +102,7 @@ router.get('/doors/:status', async (req, res) => {
   return res.status(responseErrorCode).json(response);
 });
 
-// @route GET api/locker/door/:id/open
+// @route GET api/lockercontroller/locker/door/:id/open
 // @description Get single locker by id
 // @access Public
 router.get('/door/:id/open', async (req, res) => {
@@ -130,7 +130,7 @@ router.get('/door/:id/open', async (req, res) => {
   return res.status(responseErrorCode).json(response);
 });
 
-// @route GET api/locker/door/:id/status
+// @route GET api/lockercontroller/locker/door/:id/status
 // @description Get single locker by id
 // @access Public
 router.get('/door/:id/status', async (req, res) => {
@@ -151,9 +151,11 @@ router.get('/door/:id/status', async (req, res) => {
     const filteredDoors = Object.keys(doors)
           .filter(doorId => doorId === reqDoorId)
           .reduce((obj, doorId) => {
-              obj[doorId] = doors[doorId];
-              return obj;
+            console.log(obj[doorId], doors[doorId])
+            obj[doorId] = doors[doorId];
+            return obj;
         }, {});
+        console.log(filteredDoors);
     if(filteredDoors !== undefined) {
       response.status = "success";
       response.data = filteredDoors;

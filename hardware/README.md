@@ -83,7 +83,7 @@
 ```
 
 ## Get filtered doors status by status name (opened, closed)
-`GET` api/locker/doors/:status
+`GET` api/lockercontroller/locker/doors/:status
 
 #### request parameters
 | Parameter name | Description |
@@ -112,7 +112,7 @@
 
 
 ## Open specific door
-`GET` api/locker/door/:id/open
+`GET` api/lockercontrollerlocker/door/:id/open
 
 #### request parameters
 | Parameter name | Description |
@@ -141,7 +141,7 @@
 
 
 ## Open All doors (Unavailable now)
-`GET` api/locker/doors/open
+`GET` api/lockercontroller/locker/doors/open
 
 #### request parameters
 | Parameter name | Description |
@@ -171,7 +171,7 @@
 ```
 
 ## Get specific door status
-`GET` api/locker/door/:id/status
+`GET` api/lockercontroller/locker/door/:id/status
 
 #### request parameters
 | Parameter name | Description |
