@@ -30,7 +30,7 @@ class LockerCommand {
             console.log('[INFO] command unlock door no.', doorNo, serial_response);
             if(serial_response) {
                 let channelStatus = functions.getStatusFromQuery(serial_response, doorNo);
-                console.log('doorOpen', doorNo, channelStatus, serial_response);
+                //console.log('doorOpen', doorNo, channelStatus, serial_response);
                 response['doorStatus'] = channelStatus;
             }
             else {
