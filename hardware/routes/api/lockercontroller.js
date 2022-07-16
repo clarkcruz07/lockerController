@@ -84,7 +84,7 @@ router.get('/doors/:status', async (req, res) => {
       for (const key in doors) {
         if (Object.hasOwnProperty.call(doors, key)) {
           const doorStatus = doors[key];
-          if(doorStatus === rqDoorStatus) {
+          if(doorStatus === (rqDoorStatus === 'opened'? 'open' : rqDoorStatus === 'closed'? 'close': '')) {
             filteredDoors.push({
               doorId: key,
               doorStatus: doorStatus
