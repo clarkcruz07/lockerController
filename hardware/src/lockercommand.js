@@ -19,21 +19,22 @@ class LockerCommand {
     async doorOpen(doorNo){
         let response = {
             "doorID": doorNo,
-            "doorStatus": "Error"
+            "doorStatus": "Error",
+            "status_msg": ""
         };
         let door = lockerconfig.doorMapping[doorNo];
         if(door === undefined) {
-            response['doorStatus'] = "No door no." + doorNo.toString();
+            response['status_msg'] = "No door no." + doorNo.toString();
         }
         else {
-            let response = await this.controlboardCommu.portWrite(functions.getCommandUnlock(door.board, door.channel));
-            console.log('[INFO] command unlock door no.', doorNo, response);
-            if(response) {
-                let channelStatus = functions.getStatusFromQuery(response, doorNo);
+            let serial_response = await this.controlboardCommu.portWrite(functions.getCommandUnlock(door.board, door.channel));
+            console.log('[INFO] command unlock door no.', doorNo, serial_response);
+            if(serial_response) {
+                let channelStatus = functions.getStatusFromQuery(serial_response, doorNo);
                 response['doorStatus'] = channelStatus;
             }
             else {
-                response['doorStatus'] = "Serial communication error";
+                response['status_msg'] = "Serial communication error";
             }
         }
         return response;
@@ -41,7 +42,8 @@ class LockerCommand {
 
     async getDoorsStatus() {
         let response = {
-            'doorStatus': 'Error'
+            'doorStatus': 'Error',
+            "status_msg": ""
         };
         let boardIds = [];
         for (const doorId in this.lockerDoorList) {
@@ -53,10 +55,10 @@ class LockerCommand {
             }
         }
         for (const boardId of boardIds) {
-            let response = await this.controlboardCommu.portWrite(functions.getCommandQueryState(boardId));
-            console.log('[INFO] command querystate controlboard no.', boardId, response);
-            if(response) {
-                let channelStatus = functions.getStatusFromQuery(response);
+            let serial_response = await this.controlboardCommu.portWrite(functions.getCommandQueryState(boardId));
+            console.log('[INFO] command querystate controlboard no.', boardId, serial_response);
+            if(serial_response) {
+                let channelStatus = functions.getStatusFromQuery(serial_response);
                 
                 response['doorStatus'] = Object.keys(this.lockerDoorList).map((doorId) => {
                     if(parseInt(this.lockerDoorList[doorId].board, 10) === parseInt(boardId, 10)) {
@@ -65,18 +67,19 @@ class LockerCommand {
                 });
             }
             else {
-                response['doorStatus'] = "Serial communication error on board id. " + boardId.toString();
+                response['status_msg'] = "Serial communication error on board id. " + boardId.toString();
             }
         }
         
         return response;
     }
 
-    async doorLEDControl(doorNo, controlStatus){
+    async doorLEDControl(doorNo, controlStatus) {
         // Set default response
         let response = {
             "doorID": doorNo,
-            "ledStatus": "Error"
+            "ledStatus": "Error",
+            "status_msg": ""
         };
 
         let door = lockerconfig.doorMapping[doorNo];
@@ -90,6 +93,10 @@ class LockerCommand {
                 }
             }
         }
+        else {
+            response['status_msg'] = "Serial communication error on board id. " + boardId.toString();
+        }
+        
         return response;
     }
 }
