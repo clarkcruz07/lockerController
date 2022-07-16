@@ -40,7 +40,7 @@ class LockerCommand {
     }
 
     async getDoorsStatus() {
-        let response = [];
+        let response = {};
         let boardIds = [];
         for (const doorId in this.lockerDoorList) {
             if (Object.hasOwnProperty.call(this.lockerDoorList, doorId)) {
