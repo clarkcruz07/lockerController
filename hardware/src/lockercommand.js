@@ -50,25 +50,25 @@ class LockerCommand {
                 }
             }
         }
+        let doorsStatus = {};
         for (const boardId of boardIds) {
             let serial_response = await this.controlboardCommu.portWrite(functions.getCommandQueryState(boardId));
             console.log('[INFO] command querystate controlboard no.', boardId, serial_response);
             if(serial_response) {
                 let channelStatus = functions.getStatusFromQuery(serial_response);
                 
-                let doorsStatus = {};
                 
                 Object.keys(this.lockerDoorList).map((doorId) => {
                     if(parseInt(this.lockerDoorList[doorId].board, 10) === parseInt(boardId, 10)) {
                         doorsStatus[doorId] = channelStatus[parseInt(this.lockerDoorList[doorId].channel, 10)-1];
                     }
                 });
-                response['doors'] = doorsStatus;
             }
             else {
                 response['error_msg'] = "Serial communication error on board id. " + boardId.toString();
             }
         }
+        response['doors'] = doorsStatus;
         
         return response;
     }
