@@ -5,7 +5,7 @@
 `http://localhost:9090`
 
 ## Get locker config
-`GET` api/locker
+`GET` api/lockercontroller
 #### request parameters
 | Parameter name | Description |
 | ------------- | ------------- |
@@ -53,7 +53,7 @@
 ```
 
 ## Get all doors status
-`GET` api/locker/doors
+`GET` api/lockercontroller/doors
 
 #### request parameters
 | Parameter name | Description |
@@ -83,7 +83,7 @@
 ```
 
 ## Get filtered doors status by status name (opened, closed)
-`GET` api/lockercontroller/locker/doors/:status
+`GET` api/lockercontroller/doors/:status
 
 #### request parameters
 | Parameter name | Description |
@@ -141,7 +141,7 @@
 
 
 ## Open All doors (Unavailable now)
-`GET` api/lockercontroller/locker/doors/open
+`GET` api/lockercontroller/doors/open
 
 #### request parameters
 | Parameter name | Description |
@@ -171,7 +171,7 @@
 ```
 
 ## Get specific door status
-`GET` api/lockercontroller/locker/door/:id/status
+`GET` api/lockercontroller/door/:id/status
 
 #### request parameters
 | Parameter name | Description |
