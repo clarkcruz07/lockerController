@@ -71,6 +71,10 @@
     status: "success",
     status_msg: "successful get locker configuration",
     data: {
+        doors: {
+            STRING_DOOR_ID: STRING_DOOR_STATUS,
+            ...
+        }
     }
 }
 
@@ -96,6 +100,8 @@
     status: "success",
     status_msg: "successful get locker configuration",
     data: {
+        doorID: STRING_DOOR_ID,
+        doorStatus: STRING_DOOR_STATUS
     }
 }
 
@@ -104,15 +110,84 @@
 
 ## Open specific door
 `GET` api/locker/door/:id/open
-parameters:
-- `id` is door id that begin from 1
+
+#### request parameters
+| Parameter name | Description |
+| ------------- | ------------- |
+| id  | door indentify number that begin from 1 |
+
+#### response
+| Parameter name | Description |
+| ------------- | ------------- |
+| status  | response status (success, fail)  |
+| status_msg  | response stus message |
+| data  | repsponse data  |
+
+```
+{
+    status: "success",
+    status_msg: "successful get locker configuration",
+    data: {
+        doorID: STRING_DOOR_ID,
+        doorStatus: STRING_DOOR_STATUS
+    }
+}
+
+```
 
 
 ## Open All doors (Unavailable now)
 `GET` api/locker/doors/open
 
+#### request parameters
+| Parameter name | Description |
+| ------------- | ------------- |
+| -  | -  |
+
+#### response
+| Parameter name | Description |
+| ------------- | ------------- |
+| status  | response status (success, fail)  |
+| status_msg  | response stus message |
+| data  | repsponse data  |
+
+```
+{
+    status: "success",
+    status_msg: "successful get locker configuration",
+    data: {
+        doors: {
+            STRING_DOOR_ID: STRING_DOOR_STATUS,
+            ...
+        }
+    }
+}
+
+```
 
 ## Get specific door status
 `GET` api/locker/door/:id/status
-parameters:
-- `id` is door id that begin from 1
+
+#### request parameters
+| Parameter name | Description |
+| ------------- | ------------- |
+| id  | door indentify number that begin from 1 |
+
+#### response
+| Parameter name | Description |
+| ------------- | ------------- |
+| status  | response status (success, fail)  |
+| status_msg  | response stus message |
+| data  | repsponse data  |
+
+```
+{
+    status: "success",
+    status_msg: "successful get locker configuration",
+    data: {
+        doorID: STRING_DOOR_ID,
+        doorStatus: STRING_DOOR_STATUS
+    }
+}
+
+```
