@@ -9,9 +9,11 @@ const LockerCommand = require('../../src/lockercommand.js');
 let lockerCtl = new LockerCommand();
 
 // @route GET api/locker
-// @description Get locker infomations
+// @description Get locker configuration
 // @access Public
 router.get('/', (req, res) => {
+  // Set default response
+  let responseErrorCode = 400;
   let response = {
     status: "fail",
     status_msg: "",
@@ -21,137 +23,147 @@ router.get('/', (req, res) => {
   if(locker != {}) {
     response.status = "success";
     response.data = locker;
-    return res.json(response)
+    return res.json(response);
   }
   else {
-    response.status_msg = 'No Locker data found';
-    return res.status(404).json(response)
+    response.status_msg = 'No Locker config found';
   }
+  return res.status(responseErrorCode).json(response);
 });
 
 // @route GET api/locker/doors
-// @description Get door list
+// @description Get doors status list
 // @access Public
 router.get('/doors', async (req, res) => {
+  // Set default response
+  let responseErrorCode = 400;
   let response = {
     status: "fail",
     status_msg: "",
     data: {}
   };
   let doors = await lockerCtl.getDoorsStatus();
-  if(doors != {}) {
-    response.status = "success";
-    response.data = doors === undefined? {}: doors;
-    return res.json(response)
+  if((doors === {}) || (doors === undefined)) {
+    response.status_msg = 'No Doors found';
   }
   else {
-    response.status_msg = 'No Doors found';
-    return res.status(404).json(response)
+    response.status = "success";
+    response.data = doors;
+    return res.json(response);
   }
+  return res.status(responseErrorCode).json(response);
 });
 
-// @route GET api/locker/doors/closed
-// @description Get closed door list
+// @route GET api/locker/doors/:status
+// @description Get door that have a speficfic status list (opened, closed)
 // @access Public
-router.get('/doors/closed', async (req, res) => {
+router.get('/doors/:status', async (req, res) => {
+  // Set default response
+  let responseErrorCode = 400;
   let response = {
     status: "fail",
     status_msg: "",
     data: {}
   };
-  let doors = await lockerCtl.getDoorsStatus();
-  if(doors != {}) {
-    const filteredDoors = Object.keys(doors)
-          .filter(doorId => parseInt(doors[doorId].doorStatus, 10) === 0)
-          .reduce((obj, doorId) => {
-              obj[doorId] = doors[doorId];
-              return obj;
-        }, {});
-    response.status = "success";
-    response.data = filteredDoors === undefined? {}: filteredDoors;
-    return res.json(response)
+
+  // Check requested status to filter
+  const doorReqStatus = req.params.id;
+  if(doorReqStatus in ['opened', 'closed']) {
+    let doorStatusRepresent = 0;
+    if(doorReqStatus === 'opened') {
+        doorStatusRepresent = 1;
+    }
+    
+    // Get filtered status
+    let doors = await lockerCtl.getDoorsStatus();
+    if((doors === {}) || (doors === undefined)) {
+      response.status_msg = 'Cannot get door status';
+    }
+    else {
+      const filteredDoors = Object.keys(doors)
+            .filter(doorId => parseInt(doors[doorId].doorStatus, 10) === doorStatusRepresent)
+            .reduce((obj, doorId) => {
+                obj[doorId] = doors[doorId];
+                return obj;
+          }, {});
+          if(filteredDoors !== undefined) {
+            response.status = "success";
+            response.data = filteredDoors;
+            return res.json(response);
+          }
+          else {
+            response.status_msg = 'No Door status found';
+          }
+    }
   }
   else {
-    response.status_msg = 'No Doors found';
-    return res.status(404).json(response)
+    response.status_msg = 'Wrong status name, required "opened" or "closed"';
   }
+  return res.status(responseErrorCode).json(response);
 });
 
-// @route GET api/locker/doors/opened
-// @description Get opened door list
-// @access Public
-router.get('/doors/opened', async (req, res) => {
-  let response = {
-    status: "fail",
-    status_msg: "",
-    data: {}
-  };
-  let doors = await lockerCtl.getDoorsStatus();
-  if(doors != {}) {
-    const filteredDoors = Object.keys(doors)
-          .filter(doorId => parseInt(doors[doorId].doorStatus, 10) === 1)
-          .reduce((obj, doorId) => {
-              obj[doorId] = doors[doorId];
-              return obj;
-        }, {});
-    response.status = "success";
-    response.data = filteredDoors === undefined? {}: filteredDoors;
-    return res.json(response)
-  }
-  else {
-    response.status_msg = 'No Doors found';
-    return res.status(404).json(response)
-  }
-});
-
-// @route GET api/locker/door/:id
+// @route GET api/locker/door/:id/open
 // @description Get single locker by id
 // @access Public
 router.get('/door/:id/open', async (req, res) => {
+  // Set default response
+  let responseErrorCode = 400;
   let response = {
     status: "fail",
     status_msg: "",
     data: {}
   };
   let door = await lockerCtl.doorOpen(req.params.id);
-  let doorLED = await lockerCtl.doorLEDControl(req.params.id, true);
-  door["led"] = doorLED.doorStatus;
+  if(lockerCtl.doorLEDControl) {
+    let doorLED = await lockerCtl.doorLEDControl(req.params.id, true);
+    door["led"] = doorLED.doorStatus;
+  }
   
   if(door != {}) {
-    return res.json(door)
+    response.status = "success";
+    response.data = door;
+    return res.json(response);
   }
   else {
     response.status_msg = 'Cannot open door';
-    return res.status(404).json(response)
   }
+  return res.status(responseErrorCode).json(response);
 });
 
-// @route GET api/locker/door/:id
+// @route GET api/locker/door/:id/status
 // @description Get single locker by id
 // @access Public
 router.get('/door/:id/status', async (req, res) => {
-  const reqDoorId = req.params.id;
+  // Set default response
+  let responseErrorCode = 400;
   let response = {
     status: "fail",
     status_msg: "",
     data: {}
   };
+  
+  const reqDoorId = req.params.id;
   let doors = await lockerCtl.getDoorsStatus();
-  if(doors != {}) {
+  if((doors === {}) || (doors === undefined)) {
+    response.status_msg = 'Cannot get door status';
+  }
+  else {
     const filteredDoors = Object.keys(doors)
           .filter(doorId => doorId === reqDoorId)
           .reduce((obj, doorId) => {
               obj[doorId] = doors[doorId];
               return obj;
         }, {});
-    response.status = "success";
-    response.data = filteredDoors === undefined? {}: filteredDoors;
-    return res.json(response)
+    if(filteredDoors !== undefined) {
+      response.status = "success";
+      response.data = filteredDoors;
+      return res.json(response);
+    }
+    else {
+      response.status_msg = 'No Door status found';
+    }
   }
-  else {
-    response.status_msg = 'Cannot get door status';
-    return res.status(404).json(response)
-  }
+  return res.status(responseErrorCode).json(response);
 });
 
 module.exports = router;

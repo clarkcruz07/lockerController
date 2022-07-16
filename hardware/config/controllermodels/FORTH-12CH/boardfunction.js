@@ -40,14 +40,19 @@ const functions = {
     }
     return hexpack;
   },
-  getStatusFromQuery: function(responseData) {
+  getStatusFromQuery: function(responseData, doorID) {
     const stateArray = responseData.toString('hex').match(/.{1,2}/g).slice(4, 16);
 
-    let channelStatus = [];
-    stateArray.forEach( (element, key) => {
-      channelStatus.push(element === '43'? 'close' : element === '50'? 'open' : '');
+    let channelStatus = {};
+    let key = 1;
+    stateArray.forEach( (element) => {
+      channelStatus[key.toString()] = (element === '43'? 'close' : element === '50'? 'open' : '';
+      key += 1;
     });
 
+    if(doorID) {
+      return channelStatus[doorID];
+    }
     return channelStatus;
   },
   getCommandUnlock: function(boardId, doorNo) {

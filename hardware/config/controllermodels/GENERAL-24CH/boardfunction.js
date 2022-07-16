@@ -16,11 +16,14 @@ const functions = {
       }
       return cs;
     },
-    getStatusFromQuery: function(responseData) {
+    getStatusFromQuery: function(responseData, doorID) {
       let channelStatus = Object.assign({},
         utils.convertHextoBinStatus(responseData.slice(6, 7), 1),
         utils.convertHextoBinStatus(responseData.slice(7, 8), 9),
         utils.convertHextoBinStatus(responseData.slice(8, 9), 17));
+      if(doorID) {
+        return channelStatus[doorID];
+      }
       return channelStatus;
     },
     getCommandUnlock: function(boardId, doorNo) {

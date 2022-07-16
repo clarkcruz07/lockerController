@@ -2,7 +2,7 @@
 const SerialCommunication = require('../src/serialcommunication.js');
 
 const lockerconfig = require('../config/lockerconfig.json');
-const {config, functions} = require('../config/ctlboard/cbconfig.js');
+const {config, functions} = require('../config/controllermodels/controlboardconfig.js');
 
 //const STATUS_DOORCLOSE = '0';
 const STATUS_DOOROPEN = '1';
@@ -17,30 +17,30 @@ class LockerCommand {
     }
 
     async doorOpen(doorNo){
-        let result = {
+        let response = {
             "doorID": doorNo,
             "doorStatus": "Error"
         };
         let door = lockerconfig.doorMapping[doorNo];
         if(door === undefined) {
-            result['doorStatus'] = "No door no." + doorNo.toString();
+            response['doorStatus'] = "No door no." + doorNo.toString();
         }
         else {
             let response = await this.controlboardCommu.portWrite(functions.getCommandUnlock(door.board, door.channel));
             console.log('[INFO] command unlock door no.', doorNo, response);
             if(response) {
-                let channelStatus = functions.getStatusFromQuery(response);
-                result['doorStatus'] = STATUS_DOOROPEN;
+                let channelStatus = functions.getStatusFromQuery(response, doorNo);
+                response['doorStatus'] = channelStatus;
             }
             else {
-                result['doorStatus'] = "Serial communication error";
+                response['doorStatus'] = "Serial communication error";
             }
         }
-        return result;
+        return response;
     }
 
     async getDoorsStatus() {
-        let result = {
+        let response = {
             'doorStatus': 'Error'
         };
         let boardIds = [];
@@ -58,47 +58,39 @@ class LockerCommand {
             if(response) {
                 let channelStatus = functions.getStatusFromQuery(response);
                 
-                result['doorStatus'] = Object.keys(this.lockerDoorList).map((doorId) => {
+                response['doorStatus'] = Object.keys(this.lockerDoorList).map((doorId) => {
                     if(parseInt(this.lockerDoorList[doorId].board, 10) === parseInt(boardId, 10)) {
                         return channelStatus[parseInt(this.lockerDoorList[doorId].channel, 10)-1]
                     }
                 });
             }
             else {
-                result['doorStatus'] = "Serial communication error on board id. " + boardId.toString();
+                response['doorStatus'] = "Serial communication error on board id. " + boardId.toString();
             }
         }
         
-        return result;
+        return response;
     }
 
     async doorLEDControl(doorNo, controlStatus){
-        let door = lockerconfig.doorMapping[doorNo];
-        if(door === undefined) {
-            return {
-                "doorID": doorNo,
-                "doorLEDStatus": "Error"
-            }
-        }
+        // Set default response
+        let response = {
+            "doorID": doorNo,
+            "ledStatus": "Error"
+        };
 
-        let response = undefined;
-        if(functions.getCommandLEDcontrol) {
-            response = await this.controlboardCommu.portWrite(functions.getCommandLEDcontrol(door.board, door.channel));
+        let door = lockerconfig.doorMapping[doorNo];
+        if(door !== undefined) {
+            let serial_response = await this.controlboardCommu.portWrite(functions.getCommandLEDcontrol(door.board, door.channel));
             console.log('[INFO] command led control querystate door no.', doorNo, controlStatus? "ON": "OFF", response);
-        }
-        if(response) {
-            return {
-                "doorID": doorNo,
-                "doorLEDStatus": controlStatus? "ON": "OFF"
+            if(serial_response) {
+                return {
+                    "doorID": doorNo,
+                    "ledStatus": controlStatus? "ON": "OFF"
+                }
             }
         }
-        else {
-            return {
-                "doorID": doorNo,
-                "doorLEDStatus": "Error"
-            }
-        }
-        
+        return response;
     }
 }
 
