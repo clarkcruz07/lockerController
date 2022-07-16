@@ -64,10 +64,10 @@ router.get('/doors/:status', async (req, res) => {
   };
 
   // Check requested status to filter
-  const doorReqStatus = req.params.id;
-  if(doorReqStatus in ['opened', 'closed']) {
+  const rqDoorStatus = req.params.status;
+  if(rqDoorStatus in ['opened', 'closed']) {
     let doorStatusRepresent = 0;
-    if(doorReqStatus === 'opened') {
+    if(rqDoorStatus === 'opened') {
         doorStatusRepresent = 1;
     }
     
@@ -109,9 +109,11 @@ router.get('/door/:id/open', async (req, res) => {
     status: "fail",
     status_msg: ""
   };
-  let door = await lockerCtl.doorOpen(req.params.id);
+
+  const reqDoorId = req.params.id;
+  let door = await lockerCtl.doorOpen(reqDoorId);
   if(lockerCtl.doorLEDControl) {
-    let doorLED = await lockerCtl.doorLEDControl(req.params.id, true);
+    let doorLED = await lockerCtl.doorLEDControl(reqDoorId, true);
     door["led"] = doorLED.doorStatus;
   }
   
