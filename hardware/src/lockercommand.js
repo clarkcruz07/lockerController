@@ -31,7 +31,7 @@ class LockerCommand {
             
             if(serial_response) {
                 /*** Just prevent someboard not response with door status */
-                const selectedDoor = this.lockerDoorList[doorId];
+                const selectedDoor = this.lockerDoorList[doorNo];
                 const boardId = selectedDoor.board;
                 const channel = selectedDoor.channel;
                 let serial_get_status_response = await this.controlboardCommu.portWrite(functions.getCommandQueryState(boardId));
