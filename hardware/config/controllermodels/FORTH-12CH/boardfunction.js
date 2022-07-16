@@ -40,7 +40,7 @@ const functions = {
     }
     return hexpack;
   },
-  getStatusFromQuery: function(responseData, doorID) {
+  getStatusFromQuery: function(responseData, doorId) {
     const stateArray = responseData.toString('hex').match(/.{1,2}/g).slice(4, 16);
 
     let channelStatus = {};
@@ -50,8 +50,8 @@ const functions = {
       key += 1;
     });
 
-    if(doorID) {
-      return channelStatus[doorID];
+    if(doorId) {
+      return channelStatus[doorId];
     }
     return channelStatus;
   },
