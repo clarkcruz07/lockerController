@@ -103,7 +103,7 @@
     status: "success",
     status_msg: "successful get locker configuration",
     data: {
-        doorID: STRING_DOOR_ID,
+        doorId: STRING_DOOR_ID,
         doorStatus: STRING_DOOR_STATUS
     }
 }
@@ -132,7 +132,7 @@
     status: "success",
     status_msg: "successful get locker configuration",
     data: {
-        doorID: STRING_DOOR_ID,
+        doorId: STRING_DOOR_ID,
         doorStatus: STRING_DOOR_STATUS
     }
 }
@@ -191,7 +191,7 @@
     status: "success",
     status_msg: "successful get locker configuration",
     data: {
-        doorID: STRING_DOOR_ID,
+        doorId: STRING_DOOR_ID,
         doorStatus: STRING_DOOR_STATUS
     }
 }

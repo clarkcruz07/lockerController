@@ -18,7 +18,7 @@ class LockerCommand {
 
     async doorOpen(doorNo){
         let response = {
-            "doorID": doorNo,
+            "doorId": doorNo,
             "doorStatus": "Error"
         };
         let door = lockerconfig.doorMapping[doorNo];
@@ -76,7 +76,7 @@ class LockerCommand {
     async doorLEDControl(doorNo, controlStatus) {
         // Set default response
         let response = {
-            "doorID": doorNo,
+            "doorId": doorNo,
             "ledStatus": "Error"
         };
 
@@ -87,7 +87,7 @@ class LockerCommand {
                 console.log('[INFO] command led control querystate door no.', doorNo, controlStatus? "ON": "OFF", response);
                 if(serial_response) {
                     return {
-                        "doorID": doorNo,
+                        "doorId": doorNo,
                         "ledStatus": controlStatus? "ON": "OFF"
                     }
                 }
