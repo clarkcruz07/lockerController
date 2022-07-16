@@ -102,10 +102,13 @@
 {
     status: "success",
     status_msg: "successful get locker configuration",
-    data: {
-        doorId: STRING_DOOR_ID,
-        doorStatus: STRING_DOOR_STATUS
-    }
+    data: [
+        {
+            doorId: STRING_DOOR_ID,
+            doorStatus: STRING_DOOR_STATUS
+        },
+        ...
+    ]
 }
 
 ```
