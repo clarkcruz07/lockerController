@@ -11,13 +11,14 @@
 | ------------- | ------------- |
 | -  | -  |
 
-#### response
+#### response parameters
 | Parameter name | Description |
 | ------------- | ------------- |
 | status  | response status (success, fail)  |
 | status_msg  | response stus message |
 | data  | repsponse data  |
 
+#### example response
 ```
 {
     status: "success",
@@ -59,13 +60,14 @@
 | ------------- | ------------- |
 | -  | -  |
 
-#### response
+#### response parameters
 | Parameter name | Description |
 | ------------- | ------------- |
 | status  | response status (success, fail)  |
 | status_msg  | response stus message |
 | data  | repsponse data  |
 
+#### example response
 ```
 {
     status: "success",
@@ -88,13 +90,14 @@
 | ------------- | ------------- |
 | -  | -  |
 
-#### response
+#### response parameters
 | Parameter name | Description |
 | ------------- | ------------- |
 | status  | response status (success, fail)  |
 | status_msg  | response stus message |
 | data  | repsponse data  |
 
+#### example response
 ```
 {
     status: "success",
@@ -116,13 +119,14 @@
 | ------------- | ------------- |
 | id  | door indentify number that begin from 1 |
 
-#### response
+#### response parameters
 | Parameter name | Description |
 | ------------- | ------------- |
 | status  | response status (success, fail)  |
 | status_msg  | response stus message |
 | data  | repsponse data  |
 
+#### example response
 ```
 {
     status: "success",
@@ -144,13 +148,14 @@
 | ------------- | ------------- |
 | -  | -  |
 
-#### response
+#### response parameters
 | Parameter name | Description |
 | ------------- | ------------- |
 | status  | response status (success, fail)  |
 | status_msg  | response stus message |
 | data  | repsponse data  |
 
+#### example response
 ```
 {
     status: "success",
@@ -173,13 +178,14 @@
 | ------------- | ------------- |
 | id  | door indentify number that begin from 1 |
 
-#### response
+#### response parameters
 | Parameter name | Description |
 | ------------- | ------------- |
 | status  | response status (success, fail)  |
 | status_msg  | response stus message |
 | data  | repsponse data  |
 
+#### example response
 ```
 {
     status: "success",
