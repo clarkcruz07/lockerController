@@ -67,7 +67,7 @@ class LockerCommand {
             let serial_response = await this.controlboardCommu.portWrite(functions.getCommandQueryState(boardId));
             console.log('[INFO] command querystate controlboard no.', boardId, serial_response);
             if(serial_response) {
-                let channelStatus = functions.getStatusFromQuery(serial_response);=
+                let channelStatus = functions.getStatusFromQuery(serial_response);
                 Object.keys(this.lockerDoorList).map((doorId) => {
                     if(parseInt(this.lockerDoorList[doorId].board, 10) === parseInt(boardId, 10)) {
                         doorsStatus[doorId] = channelStatus[this.lockerDoorList[doorId].channel];
