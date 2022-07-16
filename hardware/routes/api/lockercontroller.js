@@ -92,7 +92,6 @@ router.get('/doors/:status', async (req, res) => {
           
         }
       }
-      console.log('filteredDoors', filteredDoors);
       if(filteredDoors !== undefined) {
         response.status = "success";
         response['data'] = filteredDoors;
@@ -128,7 +127,6 @@ router.get('/door/:id/open', async (req, res) => {
   }
   
   if(door != {}) {
-    console.log('door', door);
     let doorObj = {
       doorId: reqDoorId,
       doorStatus: door.doorStatus
