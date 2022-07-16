@@ -148,6 +148,8 @@ router.get('/door/:id/status', async (req, res) => {
     response.status_msg = 'Cannot get door status';
   }
   else {
+    console.log(doors);
+    console.log(doors.doors[reqDoorId]);
     const filteredDoors = Object.keys(doors)
           .filter(doorId => doorId === reqDoorId)
           .reduce((obj, doorId) => {
