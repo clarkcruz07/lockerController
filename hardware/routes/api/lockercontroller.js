@@ -41,13 +41,13 @@ router.get('/doors', async (req, res) => {
     status_msg: ""
   };
   let doors = await lockerCtl.getDoorsStatus();
-  if((doors === {}) || (doors === undefined)) {
-    response.status_msg = 'No Doors found';
-  }
-  else {
+  if(doors.status === 'success') {
     response.status = "success";
     response['data'] = doors;
     return res.json(response);
+  }
+  else {
+    response.status_msg = 'No Doors found: ' + doors.error_msg;
   }
   return res.status(responseErrorCode).json(response);
 });
@@ -74,10 +74,7 @@ router.get('/doors/:status', async (req, res) => {
     
     // Get filtered status
     let doorStatusResponse = await lockerCtl.getDoorsStatus();
-    if((doorStatusResponse.doors === {}) || (doorStatusResponse.doors === undefined)) {
-      response.status_msg = 'Cannot get door status';
-    }
-    else {
+    if(doorStatusResponse.status === 'success') {
       const filteredDoors = [];
       for (const key in doorStatusResponse.doors) {
         if (Object.hasOwnProperty.call(doorStatusResponse.doors, key)) {
@@ -100,6 +97,9 @@ router.get('/doors/:status', async (req, res) => {
       else {
         response.status_msg = 'No Door status found';
       }
+    }
+    else {
+      response.status_msg = 'Cannot get door status: ' + doorStatusResponse.error_msg;
     }
   }
   else {
@@ -126,7 +126,7 @@ router.get('/door/:id/open', async (req, res) => {
     door["led"] = doorLED.doorStatus;
   }
   
-  if(door != {}) {
+  if(door.status === 'success') {
     let doorObj = {
       doorId: reqDoorId,
       doorStatus: door.doorStatus
@@ -136,7 +136,7 @@ router.get('/door/:id/open', async (req, res) => {
     return res.json(response);
   }
   else {
-    response.status_msg = 'Cannot open door';
+    response.status_msg = 'Cannot open door: ' + door.error_msg;
   }
   return res.status(responseErrorCode).json(response);
 });
@@ -154,10 +154,7 @@ router.get('/door/:id/status', async (req, res) => {
   
   const reqDoorId = req.params.id;
   let doors = await lockerCtl.getDoorsStatus();
-  if((doors === {}) || (doors === undefined)) {
-    response.status_msg = 'Cannot get door status';
-  }
-  else {
+  if(doors.status === 'success') {
     if(doors.doors[reqDoorId] !== undefined) {
       let doorObj = {
         doorId: reqDoorId,
@@ -168,8 +165,11 @@ router.get('/door/:id/status', async (req, res) => {
       return res.json(response);
     }
     else {
-      response.status_msg = 'No Door status found';
+      response.status_msg = 'No Door no.' + reqDoorId + ' status found';
     }
+  }
+  else {
+    response.status_msg = 'Cannot get door status: ' + doors.error_msg;
   }
   return res.status(responseErrorCode).json(response);
 });

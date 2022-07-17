@@ -4,22 +4,27 @@ const SerialCommunication = require('../src/serialcommunication.js');
 const lockerconfig = require('../config/lockerconfig.json');
 const {config, functions} = require('../config/controllermodels/controlboardconfig.js');
 
-//const STATUS_DOORCLOSE = '0';
-const STATUS_DOOROPEN = '1';
-
 class LockerCommand {
     constructor () {
         this.controlboardCommu = new SerialCommunication(config.Communication);
         this.lockerDoorList = lockerconfig.doorMapping;
     }
     lockerInfo() {
-        return (lockerconfig);
+        if(lockerconfig) {
+            return (lockerconfig);
+        }
+        else {
+            return ({});
+        }
+        
     }
 
     async doorOpen(doorNo){
         let response = {
             "doorId": doorNo,
-            "doorStatus": "Error"
+            "doorStatus": "Error",
+            "status": "fail",
+            "error_msg": ""
         };
         let door = lockerconfig.doorMapping[doorNo];
         if(door === undefined) {
@@ -36,23 +41,24 @@ class LockerCommand {
                 const channel = selectedDoor.channel;
                 let serial_get_status_response = await this.controlboardCommu.portWrite(functions.getCommandQueryState(boardId));
                 if(serial_get_status_response) {
-                    let channelStatus = functions.getStatusFromQuery(serial_get_status_response);
-                    response['doorStatus'] = channelStatus[channel];
+                    let doorStatus = functions.getStatusFromQuery(serial_get_status_response, doorNo);
+                    response['doorStatus'] = doorStatus;
+                    response['status'] = 'success';
                 }
-                /*
-                let channelStatus = functions.getStatusFromQuery(serial_response, doorNo);
-                //console.log('doorOpen', doorNo, channelStatus, serial_response);
-                response['doorStatus'] = channelStatus;*/
             }
             else {
                 response['error_msg'] = "Serial communication error";
             }
+            console.log('[INFO] response', serial_response);
         }
         return response;
     }
 
     async getDoorsStatus() {
-        let response = {};
+        let response = {
+            "status": "fail",
+            "error_msg": ""
+        };
         let boardIds = [];
         for (const doorId in this.lockerDoorList) {
             if (Object.hasOwnProperty.call(this.lockerDoorList, doorId)) {
@@ -73,6 +79,7 @@ class LockerCommand {
                         doorsStatus[doorId] = channelStatus[this.lockerDoorList[doorId].channel];
                     }
                 });
+                response['status'] = 'success';
             }
             else {
                 response['error_msg'] = "Serial communication error on board id. " + boardId.toString();
@@ -87,7 +94,9 @@ class LockerCommand {
         // Set default response
         let response = {
             "doorId": doorNo,
-            "ledStatus": "Error"
+            "ledStatus": "Error",
+            "status": "fail",
+            "error_msg": ""
         };
 
         let door = lockerconfig.doorMapping[doorNo];
@@ -98,13 +107,14 @@ class LockerCommand {
                 if(serial_response) {
                     return {
                         "doorId": doorNo,
-                        "ledStatus": controlStatus? "ON": "OFF"
+                        "ledStatus": controlStatus? "ON": "OFF",
+                        "status": "success"
                     }
                 }
             }
         }
         else {
-            response['error_msg'] = "Serial communication error on board id. " + boardId.toString();
+            response['error_msg'] = "Serial communication error";
         }
 
         return response;

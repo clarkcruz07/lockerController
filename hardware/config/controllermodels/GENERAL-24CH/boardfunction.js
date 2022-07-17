@@ -6,6 +6,9 @@ const utils = require('../../../src/utils.js');
 const config_data = require('./boardconfig.json');
 const ctlboardCommand = config_data.Communication.HEXPACK;
 
+const STATUS_DOORCLOSE = '0';
+const STATUS_DOOROPEN = '1';
+
 const functions = {
     getChecksum: function(hexAry) {
       let cs = 0;
@@ -21,6 +24,14 @@ const functions = {
         utils.convertHextoBinStatus(responseData.slice(6, 7), 1),
         utils.convertHextoBinStatus(responseData.slice(7, 8), 9),
         utils.convertHextoBinStatus(responseData.slice(8, 9), 17));
+        
+      // Convert to readable data
+      for (const key in channelStatus) {
+        if (Object.hasOwnProperty.call(channelStatus, key)) {
+          channelStatus[key] = channelStatus[key] === STATUS_DOORCLOSE? 'close' : channelStatus[key] === STATUS_DOOROPEN? 'open' : 'error';
+        }
+      }
+
       if(doorId) {
         return channelStatus[doorId];
       }
