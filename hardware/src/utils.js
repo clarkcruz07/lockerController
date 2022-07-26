@@ -29,7 +29,7 @@ const utils = {
     },
     convertHextoBinStatus(hexValue, startIdx) {
         var hexString = hexValue.toString("hex").toUpperCase();
-        var binString = (parseInt(hexString, 16)).toString(2);
+        var binString = (parseInt(hexString, 16)).toString(2).padStart(8, '0');
         var binArray = binString.split('')
         let binaryStatus = {};
         binArray.slice().reverse().forEach(function(item, key) {
