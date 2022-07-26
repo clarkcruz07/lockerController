@@ -30,6 +30,7 @@ router.get('/', (req, res) => {
   return res.status(responseErrorCode).json(response);
 });
 
+//*////////////////////////////////////////// Door control
 // @route GET api/lockercontroller/doors
 // @description Get doors status list
 // @access Public
@@ -51,6 +52,7 @@ router.get('/doors', async (req, res) => {
   }
   return res.status(responseErrorCode).json(response);
 });
+
 
 // @route GET api/lockercontroller/doors/:status
 // @description Get door that have a speficfic status list (opened, closed)
@@ -174,4 +176,92 @@ router.get('/door/:id/status', async (req, res) => {
   return res.status(responseErrorCode).json(response);
 });
 
+// @route GET api/lockercontroller/led/:id/on
+// @description Turn single locker led by id on
+// @access Public
+router.get('/led/:id/on', async (req, res) => {
+  // Set default response
+  let responseErrorCode = 400;
+  let response = {
+    status: "fail",
+    status_msg: ""
+  };
+
+  const reqDoorId = req.params.id;
+  let doorLED;
+  if(lockerCtl.doorLEDControl) {
+    doorLED = await lockerCtl.doorLEDControl(reqDoorId, true);
+  }
+  
+  if(doorLED.status === 'success') {
+    let doorObj = {
+      doorId: reqDoorId,
+      doorStatus: doorLED.doorStatus
+    }
+    response.status = "success";
+    response['data'] = doorObj;
+    return res.json(response);
+  }
+  else {
+    response.status_msg = 'Cannot turn led ON: ' + doorLED.error_msg;
+  }
+  return res.status(responseErrorCode).json(response);
+});
+
+
+//*////////////////////////////////////////// Item Detection
+// @route GET api/lockercontroller/itemdetects
+// @description Get item detection of all door status list
+// @access Public
+router.get('/itemdetects', async (req, res) => {
+  // Set default response
+  let responseErrorCode = 400;
+  let response = {
+    status: "fail",
+    status_msg: ""
+  };
+  let doors = await lockerCtl.getItemDtectionStatus();
+  if(doors.status === 'success') {
+    response.status = "success";
+    response['data'] = doors;
+    return res.json(response);
+  }
+  else {
+    response.status_msg = 'No Doors found: ' + doors.error_msg;
+  }
+  return res.status(responseErrorCode).json(response);
+});
+
+// @route GET api/lockercontroller/itemdetect/:id/status
+// @description Get item detection of single door by id
+// @access Public
+router.get('/itemdetect/:id/status', async (req, res) => {
+  // Set default response
+  let responseErrorCode = 400;
+  let response = {
+    status: "fail",
+    status_msg: ""
+  };
+  
+  const reqDoorId = req.params.id;
+  let doors = await lockerCtl.getItemDtectionStatus();
+  if(doors.status === 'success') {
+    if(doors.doors[reqDoorId] !== undefined) {
+      let doorObj = {
+        doorId: reqDoorId,
+        doorStatus: doors.doors[reqDoorId]
+      }
+      response.status = "success";
+      response['data'] = doorObj;
+      return res.json(response);
+    }
+    else {
+      response.status_msg = 'No Door no.' + reqDoorId + ' status found';
+    }
+  }
+  else {
+    response.status_msg = 'Cannot get door item detection status: ' + doors.error_msg;
+  }
+  return res.status(responseErrorCode).json(response);
+});
 module.exports = router;

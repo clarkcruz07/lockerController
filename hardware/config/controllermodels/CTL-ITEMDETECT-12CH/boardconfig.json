@@ -1,5 +1,5 @@
 {
-    "model": "GENERAL-24CH",
+    "model": "CTL-ITEMDETECT-12CH",
     "channel": 24,
     "Max_id": 99,
     "Communication": {
@@ -10,8 +10,7 @@
             "cmd_packages_length": "0x05",
             "command": {
                 "unlock": "0xD1",
-                "querystate": "0xD2",
-                "lampctl": "0xD3"
+                "querystate": "0xD2"
             }
         }
     }
