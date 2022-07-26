@@ -22,7 +22,7 @@
 ```
 {
     status: "success",
-    status_msg: "successful get locker configuration",
+    status_msg: "Successful get locker configuration",
     data: {
         "lockerID": STRING_OCKER_ID,
         "controllerModel": STRING_CONTROLLER_MODEL_NAME,
@@ -71,7 +71,7 @@
 ```
 {
     status: "success",
-    status_msg: "successful get locker configuration",
+    status_msg: "Successful get all doors status",
     data: {
         doors: {
             STRING_DOOR_ID: STRING_DOOR_STATUS,
@@ -101,7 +101,7 @@
 ```
 {
     status: "success",
-    status_msg: "successful get locker configuration",
+    status_msg: "Successful get :status doors status",
     data: [
         {
             doorId: STRING_DOOR_ID,
@@ -133,7 +133,7 @@
 ```
 {
     status: "success",
-    status_msg: "successful get locker configuration",
+    status_msg: "Successful open door no. :id",
     data: {
         doorId: STRING_DOOR_ID,
         doorStatus: STRING_DOOR_STATUS
@@ -163,7 +163,7 @@
 ```
 {
     status: "success",
-    status_msg: "successful get locker configuration",
+    status_msg: "Successful open all doors",
     data: {
         doors: {
             STRING_DOOR_ID: STRING_DOOR_STATUS,
@@ -193,11 +193,95 @@
 ```
 {
     status: "success",
-    status_msg: "successful get locker configuration",
+    status_msg: "Successful get door no. :id status",
     data: {
         doorId: STRING_DOOR_ID,
         doorStatus: STRING_DOOR_STATUS
     }
 }
 
+```
+
+## Open turn specific door led on
+`GET` api/lockercontrollerlocker/led/:id/on
+
+#### request parameters
+| Parameter name | Description |
+| ------------- | ------------- |
+| id  | door indentify number that begin from 1 |
+
+#### response parameters
+| Parameter name | Description |
+| ------------- | ------------- |
+| status  | response status (success, fail)  |
+| status_msg  | response stus message |
+| data  | repsponse data  |
+
+#### example response
+```
+{
+    status: "success",
+    status_msg: "Successful turned door no. :id led on",
+    data: {
+        doorId: STRING_DOOR_ID,
+        doorStatus: STRING_DOOR_STATUS
+    }
+}
+```
+
+## Get all door item detection status
+`GET` api/lockercontroller/itemdetects
+
+#### request parameters
+| Parameter name | Description |
+| ------------- | ------------- |
+| -  | -  |
+
+#### response parameters
+| Parameter name | Description |
+| ------------- | ------------- |
+| status  | response status (success, fail)  |
+| status_msg  | response stus message |
+| data  | repsponse data  |
+
+#### example response
+```
+{
+    status: "success",
+    status_msg: "Successful get all doors item detection",
+    data: {
+        doors: {
+            STRING_DOOR_ID: STRING_DOOR_STATUS,
+            ...
+        }
+    }
+}
+
+```
+
+## Get specific door item detection status
+`GET` api/lockercontrollerlocker/itemdetect/:id/status
+
+#### request parameters
+| Parameter name | Description |
+| ------------- | ------------- |
+| id  | door indentify number that begin from 1 |
+
+#### response parameters
+| Parameter name | Description |
+| ------------- | ------------- |
+| status  | response status (success, fail)  |
+| status_msg  | response stus message |
+| data  | repsponse data  |
+
+#### example response
+```
+{
+    status: "success",
+    status_msg: "Successful get door no. :id item detection",
+    data: {
+        doorId: STRING_DOOR_ID,
+        doorStatus: STRING_DOOR_STATUS
+    }
+}
 ```

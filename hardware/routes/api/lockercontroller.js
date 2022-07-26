@@ -22,6 +22,7 @@ router.get('/', (req, res) => {
   if(locker != {}) {
     response.status = "success";
     response['data'] = locker;
+    response.status_msg = 'Successful get locker configuration';
     return res.json(response);
   }
   else {
@@ -45,6 +46,7 @@ router.get('/doors', async (req, res) => {
   if(doors.status === 'success') {
     response.status = "success";
     response['data'] = doors;
+    response.status_msg = 'Successful get all doors status';
     return res.json(response);
   }
   else {
@@ -94,6 +96,7 @@ router.get('/doors/:status', async (req, res) => {
       if(filteredDoors !== undefined) {
         response.status = "success";
         response['data'] = filteredDoors;
+        response.status_msg = 'Successful get ' + req.params.status + ' door status';
         return res.json(response);
       }
       else {
@@ -135,6 +138,7 @@ router.get('/door/:id/open', async (req, res) => {
     }
     response.status = "success";
     response['data'] = doorObj;
+    response.status_msg = 'Successful open door no.' + req.params.id;
     return res.json(response);
   }
   else {
@@ -164,6 +168,7 @@ router.get('/door/:id/status', async (req, res) => {
       }
       response.status = "success";
       response['data'] = doorObj;
+      response.status_msg = 'Successful get door no.' + req.params.id + ' status';
       return res.json(response);
     }
     else {
@@ -200,6 +205,7 @@ router.get('/led/:id/on', async (req, res) => {
     }
     response.status = "success";
     response['data'] = doorObj;
+    response.status_msg = 'Successful turned door no.' + req.params.id + ' led on';
     return res.json(response);
   }
   else {
@@ -224,6 +230,7 @@ router.get('/itemdetects', async (req, res) => {
   if(doors.status === 'success') {
     response.status = "success";
     response['data'] = doors;
+    response.status_msg = 'Successful get all doors item detection';
     return res.json(response);
   }
   else {
@@ -253,6 +260,7 @@ router.get('/itemdetect/:id/status', async (req, res) => {
       }
       response.status = "success";
       response['data'] = doorObj;
+      response.status_msg = 'Successful get door no.' + req.params.id + ' item detection';
       return res.json(response);
     }
     else {
