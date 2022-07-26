@@ -10,7 +10,8 @@
             "cmd_packages_length": "0x05",
             "command": {
                 "unlock": "0xD1",
-                "querystate": "0xD2"
+                "querystate": "0xD2",
+                "itemdetect": "0xD2"
             }
         }
     }

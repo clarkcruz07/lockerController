@@ -40,12 +40,11 @@ const functions = {
       }
       return channelStatus;
     },
-    getDetecionStatusFromQuery: function(responseData, doorId) {
+    getDetecionStatusFromQuery: function(responseData, doorId) { // may be D4 or D2 which use 9-11 data
       let channelStatus = Object.assign({},
-        utils.convertHextoBinStatus(responseData.slice(6, 7), 1),
-        utils.convertHextoBinStatus(responseData.slice(7, 8), 9),
-        utils.convertHextoBinStatus(responseData.slice(8, 9), 17));
-        
+        utils.convertHextoBinStatus(responseData.slice(9, 10), 1),
+        utils.convertHextoBinStatus(responseData.slice(10, 11), 9),
+        utils.convertHextoBinStatus(responseData.slice(11, 12), 17));
       // Convert to readable data
       for (const key in channelStatus) {
         if (Object.hasOwnProperty.call(channelStatus, key)) {
@@ -150,7 +149,7 @@ const functions = {
       hexpack.push(boardId);
       
       // (1 byte)Push Command code
-      hexpack.push(ctlboardCommand.command.querystate);
+      hexpack.push(ctlboardCommand.command.itemdetect);
       
       // (1 byte)Push Lock Number
       hexpack.push(0x00);
