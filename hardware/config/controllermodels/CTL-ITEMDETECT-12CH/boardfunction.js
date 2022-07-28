@@ -9,8 +9,8 @@ const ctlboardCommand = config_data.Communication.HEXPACK;
 const STATUS_DOORCLOSE = '0';
 const STATUS_DOOROPEN = '1';
 
-const STATUS_DETECTED = '0';
-const STATUS_NOITEM = '1';
+const STATUS_DETECTED = '1';
+const STATUS_NOITEM = '0';
 
 const functions = {
     getChecksum: function(hexAry) {
