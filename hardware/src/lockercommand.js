@@ -19,6 +19,12 @@ class LockerCommand {
         
     }
 
+
+
+
+
+
+
     async doorOpen(doorNo){
         let response = {
             "doorId": doorNo,
@@ -70,7 +76,9 @@ class LockerCommand {
                     const element = this.lockerDoorList[doorId];
                     if(!boardIds.includes(element.board)) {
                         boardIds.push(element.board);
+                        
                     }
+                    
                 }
             }
             let doorsStatus = {};
@@ -98,6 +106,53 @@ class LockerCommand {
         
         return response;
     }
+
+
+    async getAllDoor() {
+        let response = {
+            "status": "fail",
+            "error_msg": ""
+        };
+        if(functions.getCommandQueryState) {
+            let boardIds = [];
+            for (const doorId in this.lockerDoorList) {
+                if (Object.hasOwnProperty.call(this.lockerDoorList, doorId)) {
+                    const element = this.lockerDoorList[doorId];
+                    if(!boardIds.includes(element.board)) {
+                        boardIds.push(element.board);
+                        
+                    }
+                    
+                }
+            }
+            let doorsStatus = {};
+            for (const boardId of boardIds) {
+                let serial_response = await this.controlboardCommu.portWrite(functions.getCommandQueryState(boardId));
+                console.log('[INFO] command querystate controlboard no.', boardId, serial_response);
+                if(serial_response) {
+                    let channelStatus = functions.getStatusFromQuery(serial_response);
+                    Object.keys(this.lockerDoorList).map((doorId) => {
+                        if(parseInt(this.lockerDoorList[doorId].board, 10) === parseInt(boardId, 10)) {
+                            doorsStatus[doorId] = channelStatus[this.lockerDoorList[doorId].channel];
+                        }
+                    });
+                    response['status'] = 'success';
+                }
+                else {
+                    response['error_msg'] = "Serial communication error on board id. " + boardId.toString();
+                }
+            }
+            response['doors'] = doorsStatus;
+        }
+        else {
+            response['error_msg'] = "No door query state command support on this control board";
+        }
+        
+        return response;
+    }
+
+
+
 
     async getItemDtectionStatus() {
         let response = {
@@ -174,6 +229,94 @@ class LockerCommand {
 
         return response;
     }
+
+
+    async getAll() {
+
+        let response = {
+
+            "status": "fail",
+
+            "error_msg": ""
+
+        };
+
+        if(functions.getCommandUnlock) {
+
+            let boardIds = [];
+
+            for (const doorId in this.lockerDoorList) {
+
+                if (Object.hasOwnProperty.call(this.lockerDoorList, doorId)) {
+
+                    const element = this.lockerDoorList[doorId];
+
+                    console.log(element)
+
+                   
+
+                   
+
+               let door = lockerconfig.doorMapping[doorId];
+
+               let serial_response = await this.controlboardCommu.portWrite(functions.getCommandUnlock(door.board, door.channel));
+
+               
+
+               
+
+                if(serial_response) {
+
+                    /*** Just prevent someboard not response with door status */
+
+                    const selectedDoor = this.lockerDoorList[doorId];
+
+                    const boardId = selectedDoor.board;
+
+                    const channel = selectedDoor.channel;
+
+                    let serial_get_status_response = await this.controlboardCommu.portWrite(functions.getCommandQueryState(boardId));
+
+                    if(serial_get_status_response) {
+
+                        let doorStatus = functions.getStatusFromQuery(serial_get_status_response, doorId);
+
+                        response['doorStatus'] = doorStatus;
+
+                        response['status'] = 'success';
+
+                    }
+
+                }
+
+                else {
+
+                    response['error_msg'] = "Serial communication error on board id. " + door.board.toString() + ", door no. " + door.channel.toString();
+
+                }
+
+                   
+
+                }
+
+            }
+
+        }
+
+        else {
+
+            response['error_msg'] = "No door query state command support on this control board";
+
+        }
+
+       
+
+        return response;
+
+    }
+
+
+
 }
 
 module.exports = LockerCommand

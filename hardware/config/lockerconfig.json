@@ -1,79 +1,75 @@
 {
   "lockerID": "locker000001",
   "controllerModel": "CTL-ITEMDETECT-12CH",
-  "controllerSerialPATH": "COM6",
+  "controllerSerialPATH": "COM3",
   "lang": "ph",
   "BoardAmount": 1,
   "sectionLayout": {
     "1": 4,
     "2": 4,
-    "3": 4
+    "3": 10,
+    "4": 5,
+    "5": 7,
+    "6": 7
   },
   "doorMapping": {
     "1": {
-      "board": 1,
+      "board": 2,
       "channel": 1,
-      "doorSize": "S"
+      "doorSize": ""
     },
     "2": {
-      "board": 1,
+      "board": 2,
       "channel": 2,
-      "doorSize": "S"
+      "doorSize": ""
     },
     "3": {
-      "board": 1,
-      "channel": 3,
-      "doorSize": "S"
+      "board": 2,
+      "channel": 1,
+      "doorSize": ""
     },
     "4": {
-      "board": 1,
-      "channel": 4,
-      "doorSize": "S"
+      "board": 2,
+      "channel": 2,
+      "doorSize": ""
     },
     "5": {
-      "board": 1,
-      "channel": 5,
-      "doorSize": "M"
+      "board": 2,
+      "channel": 1,
+      "doorSize": ""
     },
     "6": {
-      "board": 1,
-      "channel": 6,
-      "doorSize": "M"
+      "board": 2,
+      "channel": 2,
+      "doorSize": ""
     },
     "7": {
-      "board": 1,
-      "channel": 7,
-      "doorSize": "M"
+      "board": 2,
+      "channel": 1,
+      "doorSize": ""
     },
     "8": {
-      "board": 1,
-      "channel": 8,
-      "doorSize": "M"
+      "board": 2,
+      "channel": 2,
+      "doorSize": ""
     },
     "9": {
-      "board": 1,
-      "channel": 9,
-      "doorSize": "M"
+      "board": 2,
+      "channel": 1,
+      "doorSize": ""
     },
     "10": {
-      "board": 1,
-      "channel": 10,
-      "doorSize": "M"
+      "board": 2,
+      "channel": 2,
+      "doorSize": ""
     },
     "11": {
-      "board": 1,
-      "channel": 11,
-      "doorSize": "L"
-    },
-    "12": {
-      "board": 1,
-      "channel": 12,
-      "doorSize": "L"
+      "board": 2,
+      "channel": 1,
+      "doorSize": ""
     }
   },
   "doorGroup": {
-    "1": ["1","2","3","4"],
-    "2": ["5","6","7","8"],
-    "3": ["9","10","11","12"]
+    "A": ["1","2","3","4","5","6","7","8","9","10"]
   }
 }

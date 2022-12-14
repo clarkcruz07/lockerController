@@ -32,12 +32,16 @@ const functions = {
       for (const key in channelStatus) {
         if (Object.hasOwnProperty.call(channelStatus, key)) {
           channelStatus[key] = channelStatus[key] === STATUS_DOORCLOSE? 'close' : channelStatus[key] === STATUS_DOOROPEN? 'open' : 'error';
+         
         }
+        
       }
 
       if(doorId) {
+        
         return channelStatus[doorId];
       }
+      
       return channelStatus;
     },
     getDetecionStatusFromQuery: function(responseData, doorId) { // may be D4 or D2 which use 9-11 data
@@ -49,10 +53,12 @@ const functions = {
       for (const key in channelStatus) {
         if (Object.hasOwnProperty.call(channelStatus, key)) {
           channelStatus[key] = channelStatus[key] === STATUS_DETECTED? 'yes' : channelStatus[key] === STATUS_NOITEM? 'no' : 'error';
+          
         }
       }
 
       if(doorId) {
+        
         return channelStatus[doorId];
       }
       return channelStatus;
